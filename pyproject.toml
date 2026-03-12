@@ -1,0 +1,26 @@
+[project]
+name = "hype-backtesting"
+version = "0.1.0"
+description = "Initial backtesting framework for Hyperliquid perps and HIP-3 microstructure strategies"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "requests>=2.31",
+    "aiohttp>=3.9",
+    "yfinance>=0.2.36",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "scipy>=1.12",
+    "pyyaml>=6.0",
+    "rich>=13.7",
+    "websockets>=12.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "ruff>=0.2"]
+notebook = ["jupyter>=1.0", "ipywidgets>=8.1"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

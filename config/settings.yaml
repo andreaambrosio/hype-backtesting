@@ -1,0 +1,16 @@
+hyperliquid:
+  base_url: "https://api.hyperliquid.xyz"
+  info_endpoint: "/info"
+  ws_url: "wss://api.hyperliquid.xyz/ws"
+
+backtest:
+  initial_capital: 100000.0
+  commission_bps: 2.0          # 0.02% taker fee (Hyperliquid)
+  slippage_bps: 1.0
+  risk_free_rate: 0.05         # 5% annualized (T-bills)
+  max_position_pct: 0.25       # max 25% of capital per position
+  max_drawdown_pct: 0.15       # kill switch at 15% drawdown
+
+cache:
+  dir: ".cache"
+  ttl_hours: 6

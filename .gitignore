@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/
+venv/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+*.ipynb_checkpoints/
+
+# Rust
+risk-engine/target/
+
+# Go
+services/ingest/ingest-svc
+
+# TypeScript / Node
+dashboard/node_modules/
+dashboard/.next/
+dashboard/out/
+
+# Data / Config
+.env
+.env.*
+*.parquet
+.cache/
+
+# output/*.png  -- include charts in repo

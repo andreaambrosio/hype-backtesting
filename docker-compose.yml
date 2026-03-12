@@ -1,0 +1,79 @@
+version: "3.9"
+
+services:
+  backtest:
+    build:
+      context: .
+      target: backtest
+    volumes:
+      - ./output:/app/output
+      - ./config:/app/config
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  risk-engine:
+    build:
+      context: .
+      target: risk-engine
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RUST_LOG=info
+    restart: unless-stopped
+
+  ingest:
+    build:
+      context: .
+      target: ingest
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - HL_SYMBOLS=BTC,ETH,SOL,HYPE,TURBO,MEME,WIF
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: .
+      target: dashboard
+    depends_on:
+      - ingest
+      - risk-engine
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://ingest:8081
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      - POSTGRES_DB=quantlab
+      - POSTGRES_USER=quant
+      - POSTGRES_PASSWORD=quant_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  pg_data:
